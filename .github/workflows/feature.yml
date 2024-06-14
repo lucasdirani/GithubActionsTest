@@ -49,3 +49,28 @@ jobs:
             - name: Run tests
               run: dotnet test --verbosity normal
               working-directory: tests/Postech.PhaseOne.GroupEight.TechChallenge.UnitTests
+    
+    integration_test:
+        name: Integration Tests
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Setup .NET Core
+              uses: actions/setup-dotnet@v3
+              with:
+                dotnet-version: '8.0.x'
+
+            - name: Restore dependencies
+              run: dotnet restore
+              working-directory: tests/Postech.PhaseOne.GroupEight.TechChallenge.IntegrationTests
+
+            - name: Build test project
+              run: dotnet build --no-restore
+              working-directory: tests/Postech.PhaseOne.GroupEight.TechChallenge.IntegrationTests
+
+            - name: Run tests
+              run: dotnet test --verbosity normal
+              working-directory: tests/Postech.PhaseOne.GroupEight.TechChallenge.IntegrationTests
