@@ -24,14 +24,6 @@ jobs:
             - name: Build solution
               run: dotnet build --configuration Release --no-restore
               working-directory: src
-
-            - name: Save build artifacts
-              uses: actions/upload-artifact@v2
-              with:
-                name: Artifacts
-                path: |
-                  src/**/bin/
-                  src/**/obj/
     
     unit_test:
         name: Unit Tests
@@ -46,11 +38,14 @@ jobs:
               with:
                 dotnet-version: '8.0.x'
             
-            - name: Download build artifacts
-              uses: actions/download-artifact@v2
-              with:
-                name: Artifacts
+            - name: Restore dependencies
+              run: dotnet restore
+              working-directory: tests/Postech.PhaseOne.GroupEight.TechChallenge.UnitTests
+
+            - name: Build test project
+              run: dotnet build --no-restore
+              working-directory: tests/Postech.PhaseOne.GroupEight.TechChallenge.UnitTests
 
             - name: Run tests
-              run: dotnet test --no-build --verbosity normal
+              run: dotnet test --verbosity normal
               working-directory: tests/Postech.PhaseOne.GroupEight.TechChallenge.UnitTests
