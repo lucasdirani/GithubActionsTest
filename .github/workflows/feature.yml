@@ -74,6 +74,7 @@ jobs:
             - name: Run tests
               run: dotnet test --verbosity normal
               working-directory: tests/Postech.PhaseOne.GroupEight.TechChallenge.IntegrationTests
+
     create_pr:
       name: Create Pull Request
       runs-on: ubuntu-latest
@@ -87,7 +88,7 @@ jobs:
           with:
             token: ${{ secrets.GITHUB_TOKEN }}
             commit-message: "Commit gerado automaticamente pela branch ${{github.head_ref}}"
-            branch: auto-pr-branch-${{github.head_ref}}
+            branch: ${{github.head_ref}}
             base: develop
             title: "Pull Request gerado automaticamente pela branch ${{github.head_ref}}"
             body: |
