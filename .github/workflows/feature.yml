@@ -84,6 +84,6 @@ jobs:
       needs: [unit_test, integration_test]
       steps:
       - name: Create Pull Request To Develop
-        run: gh pr create -B develop -H --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
+        run: gh pr create -B develop --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
