@@ -89,6 +89,5 @@ jobs:
       - name: Create Pull Request To Develop
         run: |
           cd $GITHUB_WORKSPACE
+          gh auth login --with-token <<< "${{ secrets.PAT_TOKEN }}"
           gh pr create -B develop --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
