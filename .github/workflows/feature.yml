@@ -74,3 +74,21 @@ jobs:
             - name: Run tests
               run: dotnet test --verbosity normal
               working-directory: tests/Postech.PhaseOne.GroupEight.TechChallenge.IntegrationTests
+    create_pr:
+      name: Create Pull Request
+      runs-on: ubuntu-latest
+      needs: [unit_test, integration_test]
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+        
+        - name: Create Pull Request To Develop
+          uses: peter-evans/create-pull-request@v4
+          with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+            commit-message: "Commit gerado automaticamente pela branch ${{github.head_ref}}"
+            branch: auto-pr-branch-${{github.head_ref}}
+            base: develop
+            title: "Pull Request gerado automaticamente pela branch ${{github.head_ref}}"
+            body: |
+              Esse é um Pull Request gerado automaticamente para mesclar as mudanças da branch ${{github.head_ref}} para develop.
