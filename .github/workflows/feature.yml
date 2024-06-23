@@ -100,16 +100,12 @@ jobs:
             git push origin $BRANCH_NAME
         
         - name: Create Pull Request To Develop
-          uses: actions/github-script@v6
+          uses: peter-evans/create-pull-request@v5
           with:
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-            script: |
-                  const { data: pullRequest } = await github.pulls.create({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    title: `Auto-generated PR from ${{ github.sha }}`,
-                    head: `auto-pr-branch-${{ github.sha }}`,
-                    base: 'develop',
-                    body: 'Esse é um Pull Request gerado automaticamente para mesclar as mudanças da branch feature para develop.'
-                  });
-                  console.log(`Created Pull Request: ${pullRequest.html_url}`);
+            token: ${{ secrets.GITHUB_TOKEN }}
+            commit-message: "Auto-generated commit"
+            branch: auto-pr-branch-${{ github.sha }}
+            base: develop
+            title: "Auto-generated PR from ${{ github.sha }}"
+            body: |
+              This is an auto-generated PR to merge changes from feature branch to develop.
