@@ -83,26 +83,7 @@ jobs:
       runs-on: ubuntu-latest
       needs: [unit_test, integration_test]
       steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-
-      - name: Install dependencies
-        run: npm install @actions/github axios
-
       - name: Create Pull Request To Develop
-        run: |
-          TOKEN="${{ secrets.GITHUB_TOKEN }}"
-          BASE="develop"
-          FEATURE_BRANCH=$(echo "${GITHUB_REF}" | sed -E 's/refs\/heads\/(.+)/\1/')
-          TITLE="Automatically generated PR from ${FEATURE_BRANCH} to ${BASE}"
-          BODY="Automatically generated PR for branch ${FEATURE_BRANCH} to ${BASE}."
-
-          URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls"
-          RESPONSE=$(curl -X POST -sSL -H "Authorization: token ${TOKEN}" -H "Content-Type: application/json" -d "{\"title\":\"${TITLE}\",\"body\":\"${BODY}\",\"head\":\"${FEATURE_BRANCH}\",\"base\":\"${BASE}\"}" "${URL}")
-
-          echo "PR created: ${RESPONSE}"
+        run: gh pr create -B develop -H ${{github.ref}} --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
