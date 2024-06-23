@@ -98,7 +98,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           run: |
             BRANCH_NAME=auto-pr-branch-${{ github.sha }}
-            git checkout -b $BRANCH_NAME
+            git checkout -b $BRANCH_NAME ${{github.head_ref}}
             git push origin $BRANCH_NAME
         
         - name: Check for Differences
