@@ -82,13 +82,26 @@ jobs:
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
+
+        - name: Setup Git
+          run: |
+            git config --global user.name 'github-actions[bot]'
+            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+        - name: Create and Push Branch
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            BRANCH_NAME=auto-pr-branch-${{github.head_ref}}
+            git checkout -b $BRANCH_NAME
+            git push origin $BRANCH_NAME
         
         - name: Create Pull Request To Develop
           uses: peter-evans/create-pull-request@v4
           with:
             token: ${{ secrets.GITHUB_TOKEN }}
             commit-message: "Commit gerado automaticamente pela branch ${{github.head_ref}}"
-            branch: ${{github.head_ref}}
+            branch: auto-pr-branch-${{github.head_ref}}
             base: develop
             title: "Pull Request gerado automaticamente pela branch ${{github.head_ref}}"
             body: |
