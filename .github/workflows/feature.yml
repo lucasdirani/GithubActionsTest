@@ -85,6 +85,8 @@ jobs:
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
+          with:
+            ref: ${{github.head_ref}}
 
         - name: Setup Git
           run: |
@@ -99,7 +101,13 @@ jobs:
             git checkout -b $BRANCH_NAME
             git push origin $BRANCH_NAME
         
+        - name: Check for Differences
+          run: |
+            git fetch origin develop
+            git diff --exit-code origin/develop || echo "Differences found"
+
         - name: Create Pull Request To Develop
+          if: success()
           uses: peter-evans/create-pull-request@v5
           with:
             token: ${{ secrets.GITHUB_TOKEN }}
