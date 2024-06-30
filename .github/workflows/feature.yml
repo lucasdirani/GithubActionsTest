@@ -90,4 +90,4 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE
           gh auth login --with-token <<< "${{ secrets.PAT_TOKEN }}"
-          gh pr create -B develop --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
+          gh pr create -B develop --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action' || gh pr edit -B develop --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
