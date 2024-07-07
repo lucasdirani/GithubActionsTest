@@ -106,6 +106,7 @@ jobs:
         - name: Solution Scan
           env:
             SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+            GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
           working-directory: src
           run: |
             dotnet tool install --global dotnet-sonarscanner
