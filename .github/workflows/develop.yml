@@ -110,11 +110,10 @@ jobs:
           env:
             SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
             GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-          working-directory: src
           run: |
             dotnet tool install --global dotnet-sonarscanner
             export PATH="$PATH:/home/runner/.dotnet/tools"
-            dotnet sonarscanner begin /k:"lucasdirani_GithubActionsTest" /o:"tech-challenge-arquitetura-sistemas-net" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.dotcover.reportsPaths=dotCover.Output.html /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-            dotnet build --no-incremental
-            dotnet dotcover test --dcReportType=HTML
+            dotnet sonarscanner begin /k:"lucasdirani_GithubActionsTest" /o:"tech-challenge-arquitetura-sistemas-net" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.dotcover.reportsPaths=dotCover.Output.html /d:sonar.sources="src" /d:sonar.tests="tests" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+            dotnet build src/Postech.PhaseOne.GroupEight.TechChallenge.sln --no-incremental
+            dotnet dotcover --targetArguments="test src/Postech.PhaseOne.GroupEight.TechChallenge.sln --no-build" --dcReportType=HTML
             dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
