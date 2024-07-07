@@ -106,6 +106,7 @@ jobs:
             SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
           run: |
             dotnet tool install --global dotnet-sonarscanner
-            dotnet sonarscanner begin /k:"lucasdirani_GithubActionsTest" /o:"tech-challenge-arquitetura-sistemas-net" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+            export PATH="$PATH:/home/runner/.dotnet/tools"
+            dotnet sonarscanner begin /k:"lucasdirani_GithubActionsTest" /o:"tech-challenge-arquitetura-sistemas-net" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
             dotnet build
             dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
