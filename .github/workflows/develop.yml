@@ -113,7 +113,7 @@ jobs:
           run: |
             dotnet tool install --global dotnet-sonarscanner
             export PATH="$PATH:/home/runner/.dotnet/tools"
-            dotnet sonarscanner begin /k:"lucasdirani_GithubActionsTest" /o:"tech-challenge-arquitetura-sistemas-net" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml /d:sonar.sources="src" /d:sonar.tests="tests" /d:sonar.exclusions="tests/**/*" /d:sonar.test.inclusions="tests/**/*" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+            dotnet sonarscanner begin /k:"lucasdirani_GithubActionsTest" /o:"tech-challenge-arquitetura-sistemas-net" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml /d:sonar.sources="src" /d:sonar.tests="tests" /d:sonar.test.inclusions="tests/**/*.cs" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
             dotnet build src/Postech.PhaseOne.GroupEight.TechChallenge.sln --no-incremental
             dotnet-coverage collect "dotnet test src/Postech.PhaseOne.GroupEight.TechChallenge.sln" -f xml -o "coverage.xml"
             dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
