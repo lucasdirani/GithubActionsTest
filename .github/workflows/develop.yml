@@ -78,7 +78,7 @@ jobs:
 
     sonarcloud:
       name: SonarCloud Scan
-      runs-on: ubuntu-latest
+      runs-on: windows-latest
       needs: build
       steps:
         - name: Checkout code
@@ -103,6 +103,7 @@ jobs:
             path: ~\sonar\cache
             key: ${{ runner.os }}-sonar
             restore-keys: ${{ runner.os }}-sonar
+
         - name: Cache SonarCloud scanner
           id: cache-sonar-scanner
           uses: actions/cache@v3
@@ -110,6 +111,7 @@ jobs:
             path: .\.sonar\scanner
             key: ${{ runner.os }}-sonar-scanner
             restore-keys: ${{ runner.os }}-sonar-scanner
+
         - name: Install SonarCloud scanner
           if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
           shell: powershell
@@ -118,6 +120,7 @@ jobs:
             dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
 
         - name: Install dotnet coverage
+          shell: powershell
           run: dotnet tool install --global dotnet-coverage
 
         - name: Solution Scan
