@@ -75,3 +75,37 @@ jobs:
             - name: Run tests
               run: dotnet test --verbosity normal
               working-directory: tests/Postech.PhaseOne.GroupEight.TechChallenge.FunctionalTests
+
+    sonarcloud:
+      name: SonarCloud Scan
+      runs-on: ubuntu-latest
+      needs: build
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Setup .NET
+          uses: actions/setup-dotnet@v3
+          with:
+            dotnet-version: '8.0.x'
+        
+        - name: Restore dependencies
+          run: dotnet restore
+          working-directory: src
+
+        - name: Build solution
+          run: dotnet build --configuration Release --no-restore
+          working-directory: src
+
+        - name: Run all tests
+          run: dotnet test --verbosity normal
+          working-directory: src
+
+        - name: Solution Scan
+          env:
+            SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+          run: |
+            dotnet tool install --global dotnet-sonarscanner
+            dotnet sonarscanner begin /k:"lucasdirani_GithubActionsTest" /o:"tech-challenge-arquitetura-sistemas-net" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+            dotnet build
+            dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
