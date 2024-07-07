@@ -97,16 +97,15 @@ jobs:
           run: dotnet build --configuration Release --no-restore
           working-directory: src
 
-        - name: Run all tests
-          run: dotnet test --verbosity normal
-          working-directory: src
-
         - name: Solution Scan
           env:
             SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+          working-directory: src
           run: |
             dotnet tool install --global dotnet-sonarscanner
             export PATH="$PATH:/home/runner/.dotnet/tools"
-            dotnet sonarscanner begin /k:"lucasdirani_GithubActionsTest" /o:"tech-challenge-arquitetura-sistemas-net" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-            dotnet build
+            dotnet tool install --global dotnet-coverage
+            dotnet sonarscanner begin /k:"lucasdirani_GithubActionsTest" /o:"tech-challenge-arquitetura-sistemas-net" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+            dotnet build --no-incremental
+            dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
             dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
