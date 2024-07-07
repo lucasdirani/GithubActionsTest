@@ -103,19 +103,8 @@ jobs:
           run: dotnet build --configuration Release --no-restore
           working-directory: src
 
-        - name: Install Coverlet
-          run: dotnet tool install --global coverlet.console
-
-        - name: Install ReportGenerator
-          run: dotnet tool install --global dotnet-reportgenerator-globaltool
-
-        - name: Run tests with coverage
-          run: dotnet test --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-          working-directory: src
-
-        - name: Convert coverage report to XML
-          run: |
-            reportgenerator -reports:**/coverage.opencover.xml -targetdir:coverage
+        - name: Install dotCover
+          run: dotnet tool install --global JetBrains.dotCover.GlobalTool
 
         - name: Solution Scan
           env:
@@ -125,6 +114,7 @@ jobs:
           run: |
             dotnet tool install --global dotnet-sonarscanner
             export PATH="$PATH:/home/runner/.dotnet/tools"
-            dotnet sonarscanner begin /k:"lucasdirani_GithubActionsTest" /o:"tech-challenge-arquitetura-sistemas-net" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+            dotnet sonarscanner begin /k:"lucasdirani_GithubActionsTest" /o:"tech-challenge-arquitetura-sistemas-net" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.dotcover.reportsPaths=dotCover.Output.html /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
             dotnet build --no-incremental
+            dotnet dotcover test --dcReportType=HTML
             dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
