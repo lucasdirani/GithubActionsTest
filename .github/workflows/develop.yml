@@ -103,8 +103,8 @@ jobs:
           run: dotnet build --configuration Release --no-restore
           working-directory: src
 
-        - name: Install dotCover
-          run: dotnet tool install --global JetBrains.dotCover.GlobalTool
+        - name: Install dotnet coverage
+          run: dotnet tool install --global dotnet-coverage
 
         - name: Solution Scan
           env:
@@ -113,7 +113,7 @@ jobs:
           run: |
             dotnet tool install --global dotnet-sonarscanner
             export PATH="$PATH:/home/runner/.dotnet/tools"
-            dotnet sonarscanner begin /k:"lucasdirani_GithubActionsTest" /o:"tech-challenge-arquitetura-sistemas-net" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.dotcover.reportsPaths=dotCover.Output.html /d:sonar.sources="src" /d:sonar.tests="tests" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+            dotnet sonarscanner begin /k:"lucasdirani_GithubActionsTest" /o:"tech-challenge-arquitetura-sistemas-net" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml /d:sonar.sources="src" /d:sonar.tests="tests" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
             dotnet build src/Postech.PhaseOne.GroupEight.TechChallenge.sln --no-incremental
-            dotnet dotcover --targetArguments="test src/Postech.PhaseOne.GroupEight.TechChallenge.sln --no-build" --dcReportType=HTML
+            dotnet-coverage collect "dotnet test src/Postech.PhaseOne.GroupEight.TechChallenge.sln" -f xml -o "coverage.xml"
             dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
