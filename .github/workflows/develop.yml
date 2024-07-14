@@ -137,20 +137,13 @@ jobs:
               next_release="release/$major.$minor.$patch"
             fi
             echo "next_release=$next_release" >> $GITHUB_ENV
-          
-        - name: Get github user data
-          id: get_user_data
-          run: |
-            curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
-            "https://api.github.com/users/${{ github.actor }}" > user_info.json
-            echo "::set-output name=username::$(jq -r .login user_info.json)"
-            echo "::set-output name=email::$(jq -r .email user_info.json)"
 
         - name: Create new release branch
           run: |
-            git config user.email steps.get_user_data.outputs.email
-            git config user.name steps.get_user_data.outputs.username
+            git config user.email ${{ secrets.REPO_OWNER_EMAIL }}
+            git config user.name ${{ secrets.REPO_OWNER_USERNAME }}
             git checkout --orphan $next_release
+            git rm -rf .
             git commit --allow-empty -m "New release branch: $next_release"
             git push origin $next_release
           env:
@@ -166,7 +159,7 @@ jobs:
 
         - name: Create or Update Pull Request
           run: |
-            if [ -z "$pr_exists" ] then
+            if [ -z "$pr_exists" ]; then
               gh pr create --base $next_release --head develop --title "Release $next_release" --body "Automated release for version $next_release"
             else
               gh pr edit $pr_exists --body "Automated update for release $next_release"
