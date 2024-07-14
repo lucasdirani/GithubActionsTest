@@ -139,13 +139,20 @@ jobs:
             echo "next_release=$next_release" >> $GITHUB_ENV
           
         - name: Create new release branch
-          run: git checkout --orphan $next_release
+          run: |
+            git checkout --orphan $next_release
+            git commit --allow-empty -m "New release branch: $next_release"
+            git push origin $next_release
+          env:
+            GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
         - name: Check for existing Pull Request
           id: check_pr
           run: |
             pr_exists=$(gh pr list --base $next_release --state open --json number --jq '.[0].number')
             echo "pr_exists=$pr_exists" >> $GITHUB_ENV
+          env:
+            GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
         - name: Create or Update Pull Request
           run: |
