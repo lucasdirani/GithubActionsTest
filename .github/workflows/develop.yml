@@ -97,5 +97,4 @@ jobs:
         - name: Coveralls Code Coverage
           uses: coverallsapp/github-action@v2
           with:
-            github-token: ${{ secrets.PAT_TOKEN }}
             files: tests/Postech.PhaseOne.GroupEight.TechChallenge.UnitTests/TestResults/coverage.info
