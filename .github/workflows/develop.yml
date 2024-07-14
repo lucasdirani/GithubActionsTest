@@ -91,9 +91,11 @@ jobs:
           working-directory: src
 
         - name: Run all solution tests
-          run: dotnet test src/Postech.PhaseOne.GroupEight.TechChallenge.sln --verbosity normal --no-restore /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
+          run: |
+            dotnet test src/Postech.PhaseOne.GroupEight.TechChallenge.sln --verbosity normal --no-restore /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
 
         - name: Coveralls Code Coverage
           uses: coverallsapp/github-action@v2
           with:
             github-token: ${{ secrets.PAT_TOKEN }}
+            files: tests/Postech.PhaseOne.GroupEight.TechChallenge.UnitTests/TestResults/coverage.info
