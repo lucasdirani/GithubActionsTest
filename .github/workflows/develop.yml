@@ -97,4 +97,4 @@ jobs:
         - name: Coveralls Code Coverage
           uses: coverallsapp/github-action@v2
           with:
-            files: tests/Postech.PhaseOne.GroupEight.TechChallenge.UnitTests/TestResults/coverage.info
+            files: tests/Postech.PhaseOne.GroupEight.TechChallenge.UnitTests/TestResults/coverage.info tests/Postech.PhaseOne.GroupEight.TechChallenge.IntegrationTests/TestResults/coverage.info
