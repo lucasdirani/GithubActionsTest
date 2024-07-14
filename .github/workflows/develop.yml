@@ -142,10 +142,8 @@ jobs:
           run: |
             git config user.email ${{ secrets.REPO_OWNER_EMAIL }}
             git config user.name ${{ secrets.REPO_OWNER_USERNAME }}
-            git checkout --orphan $next_release
-            git rm -rf .
-            git commit --allow-empty -m "New release branch: $next_release"
-            git push origin $next_release
+            git checkout -b $next_release main
+            git push -u origin $next_release
           env:
             GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
