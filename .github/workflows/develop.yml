@@ -86,9 +86,9 @@ jobs:
         - name: Setup .NET Core
           uses: actions/setup-dotnet@v3
 
-        - name: Restore tests dependencies
+        - name: Restore solution dependencies
           run: dotnet restore
-          working-directory: tests
+          working-directory: src
 
         - name: Run all solution tests
           run: dotnet test src/Postech.PhaseOne.GroupEight.TechChallenge.sln --verbosity normal --no-restore /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
