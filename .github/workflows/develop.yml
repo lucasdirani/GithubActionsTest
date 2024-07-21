@@ -98,14 +98,16 @@ jobs:
           uses: coverallsapp/github-action@v2
           with:
             files: tests/Postech.PhaseOne.GroupEight.TechChallenge.UnitTests/TestResults/coverage.info tests/Postech.PhaseOne.GroupEight.TechChallenge.IntegrationTests/TestResults/coverage.info
-
-    create_pr:
-      name: Create Pull Request
+    
+    create_release_branch:
+      name: Create Release Branch
       runs-on: ubuntu-latest
       needs: [build, unit_test, functional_test, coveralls]
       steps:
-        - name: Checkout code
+        - name: Checkout code from main
           uses: actions/checkout@v3
+          with:
+            ref: main
 
         - name: Get latest release branch
           id: get_release_branch
@@ -138,19 +140,38 @@ jobs:
             fi
             echo "next_release=$next_release" >> $GITHUB_ENV
 
-        - name: Create new release branch
+        - name: Create new branch
           run: |
             git config user.email ${{ secrets.REPO_OWNER_EMAIL }}
             git config user.name ${{ secrets.REPO_OWNER_USERNAME }}
-            git checkout -b $next_release origin/main
-            git push -u origin $next_release
+            git checkout -b $next_release
           env:
             GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+
+        - name: Push new branch
+          run: |
+            git push origin $next_release
+          env:
+            GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+
+    create_pr:
+      name: Create Pull Request
+      runs-on: ubuntu-latest
+      needs: [build, unit_test, functional_test, coveralls]
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Get latest release branch
+          id: get_release_branch
+          run: |
+            latest_release=$(git branch -r | grep 'release/' | sed 's/.*release\////' | sort -V | tail -n1)
+            echo "latest_release=$latest_release" >> $GITHUB_ENV
 
         - name: Check for existing Pull Request
           id: check_pr
           run: |
-            pr_exists=$(gh pr list --base $next_release --state open --json number --jq '.[0].number')
+            pr_exists=$(gh pr list --base $latest_release --state open --json number --jq '.[0].number')
             echo "pr_exists=$pr_exists" >> $GITHUB_ENV
           env:
             GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
@@ -158,9 +179,9 @@ jobs:
         - name: Create or Update Pull Request
           run: |
             if [ -z "$pr_exists" ]; then
-              gh pr create --base $next_release --head develop --title "Release $next_release" --body "Automated release for version $next_release"
+              gh pr create --base $latest_release --head develop --title "Release $latest_release" --body "Automated release for version $latest_release"
             else
-              gh pr edit $pr_exists --body "Automated update for release $next_release"
+              gh pr edit $pr_exists --body "Automated update for release $latest_release"
             fi
           env:
             GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
