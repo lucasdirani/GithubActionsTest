@@ -179,9 +179,9 @@ jobs:
         - name: Create or Update Pull Request
           run: |
             if [ -z "$pr_exists" ]; then
-              gh pr create --base $latest_release --head develop --title "Release $latest_release" --body "Automated release for version $latest_release"
+              gh pr create --base "$latest_release" --head "develop" --title "Release $latest_release" --body "Automated release for version $latest_release"
             else
-              gh pr edit $pr_exists --body "Automated update for release $latest_release"
+              gh pr edit "$pr_exists" --body "Automated update for release $latest_release"
             fi
           env:
             GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
