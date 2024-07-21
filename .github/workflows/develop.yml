@@ -112,8 +112,11 @@ jobs:
         - name: Get latest release branch
           id: get_release_branch
           run: |
+            echo "Branches remotas disponíveis:"
+            git branch -r
             latest_release=$(git branch -r | grep 'release/' | sed 's/.*release\////' | sort -V | tail -n1)
             echo "latest_release=$latest_release" >> $GITHUB_ENV
+            echo "Última branch de release encontrada: $latest_release"
 
         - name: Calculate next release version
           id: calc_next_version
@@ -165,8 +168,11 @@ jobs:
         - name: Get latest release branch
           id: get_release_branch
           run: |
+            echo "Branches remotas disponíveis:"
+            git branch -r
             latest_release=$(git branch -r | grep 'origin/release/' | sed 's/.*release\///' | sort -V | tail -n1)
             echo "latest_release=$latest_release" >> $GITHUB_ENV
+            echo "Última branch de release encontrada: $latest_release"
 
         - name: Check for existing Pull Request
           id: check_pr
