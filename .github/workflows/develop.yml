@@ -165,7 +165,7 @@ jobs:
         - name: Get latest release branch
           id: get_release_branch
           run: |
-            latest_release=$(git branch -r | grep 'release/' | sed 's/.*release\////' | sort -V | tail -n1)
+            latest_release=$(git branch -r | grep 'origin/release/' | sed 's/.*release\///' | sort -V | tail -n1)
             echo "latest_release=$latest_release" >> $GITHUB_ENV
 
         - name: Check for existing Pull Request
