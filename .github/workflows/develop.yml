@@ -117,7 +117,7 @@ jobs:
           run: |
             echo "Branches remotas disponíveis:"
             git branch -r
-            latest_release=$(git branch -r | grep 'origin/release/' | sed 's/origin\///' | sort -V | tail -n1)
+            latest_release=$(git branch -r | grep 'origin/release/' | sed 's/origin\///' | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//' | sort -V | tail -n1)
             echo "latest_release=$latest_release" >> $GITHUB_ENV
             echo "Última branch de release encontrada: $latest_release"
 
@@ -176,7 +176,7 @@ jobs:
           run: |
             echo "Branches remotas disponíveis:"
             git branch -r
-            latest_release=$(git branch -r | grep 'origin/release/' | sed 's/origin\///' | sort -V | tail -n1)
+            latest_release=$(git branch -r | grep 'origin/release/' | sed 's/origin\///' | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//' | sort -V | tail -n1)
             echo "latest_release=$latest_release" >> $GITHUB_ENV
             echo "Última branch de release encontrada: $latest_release"
 
