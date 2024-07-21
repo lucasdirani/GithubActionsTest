@@ -171,7 +171,7 @@ jobs:
         - name: Check for existing Pull Request
           id: check_pr
           run: |
-            pr_exists=$(gh pr list --base $latest_release --state open --json number --jq '.[0].number')
+            pr_exists=$(gh pr list --base $latest_release --state "open" --json number --jq '.[0].number')
             echo "pr_exists=$pr_exists" >> $GITHUB_ENV
           env:
             GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
