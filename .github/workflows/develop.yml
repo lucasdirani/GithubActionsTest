@@ -109,12 +109,15 @@ jobs:
           with:
             ref: main
 
+        - name: Fetch all branches
+          run: git fetch --all
+
         - name: Get latest release branch
           id: get_release_branch
           run: |
             echo "Branches remotas disponíveis:"
             git branch -r
-            latest_release=$(git branch -r | grep 'release/' | sed 's/.*release\////' | sort -V | tail -n1)
+            latest_release=$(git branch -r | grep 'origin/release/' | sed 's/.*release\///' | sort -V | tail -n1)
             echo "latest_release=$latest_release" >> $GITHUB_ENV
             echo "Última branch de release encontrada: $latest_release"
 
@@ -164,6 +167,9 @@ jobs:
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
+      
+        - name: Fetch all branches
+          run: git fetch --all
 
         - name: Get latest release branch
           id: get_release_branch
