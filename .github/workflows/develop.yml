@@ -142,7 +142,7 @@ jobs:
               else
                 patch=$((patch + 1))
               fi
-              next_release="release/$major.$minor.$patch"
+              next_release="$major.$minor.$patch"
             fi
             echo "next_release=$next_release" >> $GITHUB_ENV
 
